@@ -22,7 +22,6 @@ spec:
     plugin:
       name: "deploykf"
       parameters:
-
         ## the deployKF generator version
         ##  - available versions: https://github.com/deployKF/deployKF/releases
         ##
@@ -196,6 +195,15 @@ spec:
                 
                 katibDB:
                   enabled: true
+                
+                ## настройка внешней базы данных (PostgreSQL)
+                mysql:
+                  useExternal: true
+                  external:
+                    host: "deploykf-postgresql.deploykf-opt.svc.cluster.local"
+                    port: 5432
+                    database: "katib"
+                    driverName: "postgres"
 
               ## --------------------------------------
               ##               notebooks (Jupyter для разработки)
@@ -254,4 +262,4 @@ spec:
 
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: "argocd" 
+    namespace: "argocd"
