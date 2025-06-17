@@ -75,13 +75,19 @@ spec:
               ##                 istio
               ## --------------------------------------
               istio:
-                {} # <-- REMOVE THIS, IF YOU INCLUDE VALUES UNDER THIS SECTION!
+                charts:
+                  istioBase:
+                    version: 1.18.7
+                  istioDaemon:
+                    version: 1.18.7
 
               ## --------------------------------------
               ##                kyverno
               ## --------------------------------------
               kyverno:
-                {} # <-- REMOVE THIS, IF YOU INCLUDE VALUES UNDER THIS SECTION!
+                charts:
+                  istioGateway:
+                    version: 1.18.7
 
             ## --------------------------------------------------------------------------------
             ##                                  deploykf-core
