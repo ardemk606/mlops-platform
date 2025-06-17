@@ -241,6 +241,15 @@ spec:
                 kfpViewer:
                   enabled: true
                 
+                ## настройка внешней базы данных (PostgreSQL)
+                mysql:
+                  useExternal: true
+                  external:
+                    host: "deploykf-postgresql.deploykf-opt.svc.cluster.local"
+                    port: 5432
+                    database: "kfp"
+                    driverName: "postgres"
+                
                 ## настройки базы данных для пайплайнов
                 kfpDatabase:
                   ## используем внешний PostgreSQL (deploykf_postgresql)
