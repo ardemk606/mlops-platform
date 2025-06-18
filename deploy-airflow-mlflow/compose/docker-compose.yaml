@@ -15,33 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
-# Basic Airflow cluster configuration for CeleryExecutor with Redis and PostgreSQL.
-#
-# WARNING: This configuration is for local development. Do not use it in a production deployment.
-#
-# This configuration supports basic configuration using environment variables or an .env file
-# The following variables are supported:
-#
-# AIRFLOW_IMAGE_NAME           - Docker image name used to run Airflow.
-#                                Default: apache/airflow:master-python3.8
-# AIRFLOW_UID                  - User ID in Airflow containers
-#                                Default: 50000
-# AIRFLOW_GID                  - Group ID in Airflow containers
-#                                Default: 50000
-#
-# Those configurations are useful mostly in case of standalone testing/running Airflow in test/try-out mode
-#
-# _AIRFLOW_WWW_USER_USERNAME   - Username for the administrator account (if requested).
-#                                Default: airflow
-# _AIRFLOW_WWW_USER_PASSWORD   - Password for the administrator account (if requested).
-#                                Default: airflow
-# _PIP_ADDITIONAL_REQUIREMENTS - Additional PIP requirements to add when starting all containers.
-#                                Default: ''
-#
-# Feel free to modify this file to suit your needs.
 ---
-version: '3'
+version: '3.7'
 x-airflow-common:
   &airflow-common
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.1.1}
@@ -60,7 +35,7 @@ x-airflow-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
+  user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     redis:
       condition: service_healthy
@@ -181,7 +156,14 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    command: version
+    entrypoint: /bin/bash
+    user: "0:0"
+    command:
+      - -c
+      - |
+        mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins
+        chown -R "${AIRFLOW_UID:-50000}:0" /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins
+        exec /entrypoint "airflow" "version"
     environment:
       <<: *airflow-common-env
       _AIRFLOW_DB_UPGRADE: 'true'
@@ -203,4 +185,4 @@ services:
 
 volumes:
   postgres-db-volume:
-  minio_data:
+  minio_data: 
