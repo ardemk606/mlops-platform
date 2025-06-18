@@ -87,7 +87,7 @@ services:
         retries: 3
 
   mlflow:
-    image: ghcr.io/mlflow/mlflow:latest
+    build: ./mlflow
     container_name: mlflow
     restart: always
     ports:
